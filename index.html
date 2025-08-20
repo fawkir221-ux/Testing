@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Support Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Page 1 -->
+  <div id="page1" class="page">
+    <h1>Leave a Message</h1>
+    <input type="text" id="userInput" placeholder="Type something...">
+    <button id="submitBtn">Submit</button>
+  </div>
+
+  <!-- Page 2 -->
+  <div id="page2" class="page hidden">
+    <h1>Thank you for the support!</h1>
+  </div>
+
+  <script>
+    const input = document.getElementById("userInput");
+    const btn = document.getElementById("submitBtn");
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+
+    function submitText() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Send text to server
+      fetch("/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+
+      // Transition effect
+      page1.classList.add("fade-out");
+      setTimeout(() => {
+        page1.style.display = "none";
+        page2.classList.remove("hidden");
+        page2.classList.add("fade-in");
+      }, 500);
+    }
+
+    btn.addEventListener("click", submitText);
+    input.addEventListener("keypress", e => {
+      if (e.key === "Enter") submitText();
+    });
+  </script>
+</body>
+</html>
